@@ -10,7 +10,9 @@
 2. if you have installed it you can next step installation
 
 3. run command in terminal or command prompt
-   `node install`
+
+   `npm install`
+
 4. wait proccess finish
    and then run expo using command
    `
