@@ -2,29 +2,33 @@ import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
-import { API_KEY } from "@env";
+import { APP_API_KEY } from "@env";
 
 // import image
 import logo from "./assets/logo.png";
 
 export default function App() {
-  const [data, setData] = useState([]);
+  const [error, setError] = useState(false);
+  const [data, setData] = useState({});
+  const urlApi = `http://api.ipstack.com/check?access_key=${APP_API_KEY}&format=1`;
 
   // ambil data ketika screen dibuka
   useEffect(() => {
     getData();
   }, []);
-  console.log(data);
 
   // ambil data dari api
   const getData = () => {
     console.log("mengambil data");
-    axios("https://ipapi.co/8.8.8.8/json")
+
+    axios(urlApi)
       .then((data) => {
         setData(data.data);
+        setError(false);
       })
       .catch((err) => {
         console.log(err);
+        setError(true);
       });
   };
 
@@ -36,20 +40,22 @@ export default function App() {
         <View style={styles.ipUser}>
           <Image style={styles.logo} source={logo} />
           <Text style={styles.userLabel}>Your Ip :</Text>
-          <Text style={styles.userResult}>{data.ip}</Text>
+          <Text style={styles.userResult}>
+            {error ? "Koneksi lambat" : data.ip}
+          </Text>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.label}>IP :</Text>
-            <Text style={styles.result}>{data.ip}</Text>
-            <Text style={styles.label}>Version :</Text>
-            <Text style={styles.result}>{data.version}</Text>
+            <Text style={styles.label}>Country Code :</Text>
+            <Text style={styles.result}>{data.country_code}</Text>
+            <Text style={styles.label}>Type :</Text>
+            <Text style={styles.result}>{data.type}</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.label}>City :</Text>
             <Text style={styles.result}>{data.city}</Text>
             <Text style={styles.label}>Country :</Text>
-            <Text style={styles.result}>{data.country}</Text>
+            <Text style={styles.result}>{data.country_name}</Text>
           </View>
         </View>
         <TouchableOpacity onPress={getData} style={styles.button}>
@@ -99,13 +105,13 @@ const styles = StyleSheet.create({
     color: "#F0453C",
   },
   label: {
-    marginBottom: 16,
+    marginBottom: 8,
     fontWeight: "bold",
     opacity: 0.5,
     color: "#F74F2B",
   },
   result: {
-    marginBottom: 16,
+    marginBottom: 24,
     fontWeight: "bold",
     color: "#F74F2B",
   },
