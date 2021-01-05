@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { API_KEY } from "@env";
 
 // import image
 import logo from "./assets/logo.png";
@@ -18,9 +19,13 @@ export default function App() {
   // ambil data dari api
   const getData = () => {
     console.log("mengambil data");
-    axios("https://ipapi.co/8.8.8.8/json").then((data) => {
-      setData(data.data);
-    });
+    axios("https://ipapi.co/8.8.8.8/json")
+      .then((data) => {
+        setData(data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
